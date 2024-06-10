@@ -34,12 +34,12 @@ public class AuthService {
         try {
             AuthRequest authRequest = new AuthRequest(StaticProperties.properties.getProperty("username"), StaticProperties.properties.getProperty("password"));
             String payload = toJson(authRequest); // Convert authRequest to JSON string
-            String response = HttpClientUtil.sendPostRequest("https://qe-upload.ru1.tracelink.com/api/token", payload, null, null,0);
+            String response = HttpClientUtil.sendPostRequest("https://ru.wiremockapi.cloud/api/token", payload, null, null,null, 0);
             logger.info("Token response : " + response);
             AuthResponse authResponse = parseAuthResponse(response); // Parse JSON response to AuthResponse object
             return new JWTToken(authResponse.getToken(), authResponse.getLifeTime());
         } catch (Exception e) {
-            logger.error("Authentication failed, Terminating the application", e);
+            logger.error("Authentication failed, Terminating the application. Please correct your credentials and rerun the application", e);
             return null;
         }
     }

@@ -1,5 +1,6 @@
 package com.tracelink;
 
+import schedulers.DocumentSchedulerService;
 import services.AuthService;
 import utilities.StaticProperties;
 
@@ -25,5 +26,9 @@ public class Main {
 
         authService = new AuthService();
 
+        // Initialize and start the DocumentSchedulerService
+        DocumentSchedulerService documentSchedulerService = new DocumentSchedulerService(authService);
+        documentSchedulerService.start();
+
+        }
     }
-}
