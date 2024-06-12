@@ -22,6 +22,10 @@ public class AuthResponse {
         this.lifeTime = lifeTime;
     }
 
+    public AuthResponse(){
+        //default constructor
+    }
+
     public String getToken() {
         return token;
     }

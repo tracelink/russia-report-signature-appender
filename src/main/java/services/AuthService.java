@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utilities.HttpClientUtil;
 import utilities.JsonParser;
+import utilities.StaticMessages;
 import utilities.StaticProperties;
 
 public class AuthService {
@@ -39,7 +40,12 @@ public class AuthService {
             AuthResponse authResponse = parseAuthResponse(response); // Parse JSON response to AuthResponse object
             return new JWTToken(authResponse.getToken(), authResponse.getLifeTime());
         } catch (Exception e) {
-            logger.error("Authentication failed, Terminating the application. Please correct your credentials and rerun the application", e);
+            if (e.getMessage().contains("401")) {
+                logger.error(StaticMessages.AUTH_ERROR_401, e);
+                System.exit(1);
+            } else {
+                logger.error(StaticMessages.AUTH_ERROR_GENERIC, e);
+            }
             return null;
         }
     }

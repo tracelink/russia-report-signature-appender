@@ -35,6 +35,5 @@ public class DocumentSchedulerService extends BaseSchedulerService {
 
     @Override
     public void stop() {
-
     }
 }

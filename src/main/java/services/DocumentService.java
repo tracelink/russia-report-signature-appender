@@ -22,7 +22,7 @@ public class DocumentService {
 
     public List<Document> fetchDocuments() throws Exception {
         logger.info("Fetching documents...");
-        String jwtToken = authService.getJwtToken().getToken();
+        String jwtToken = authService.getJwtToken() != null ? authService.getJwtToken().getToken() : null;
         Map<String, String> headers = new HashMap<>();
         headers.put("Custom-Header", "value"); // Need to add token here
         String response = HttpClientUtil.sendGetRequestWithRetries("https://ru.wiremockapi.cloud/api/signEvent", jwtToken, headers, authService,1);
