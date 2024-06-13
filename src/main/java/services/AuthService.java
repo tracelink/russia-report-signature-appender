@@ -38,7 +38,7 @@ public class AuthService {
             String response = HttpClientUtil.sendPostRequest("https://ru.wiremockapi.cloud/api/token", payload, null, null,null, 0);
             logger.info("Token response : " + response);
             AuthResponse authResponse = parseAuthResponse(response); // Parse JSON response to AuthResponse object
-            return new JWTToken(authResponse.getToken(), authResponse.getLifeTime());
+            return new JWTToken(authResponse.getToken(), authResponse.getLifeTime(), authResponse.getCertThumbprint());
         } catch (Exception e) {
             if (e.getMessage().contains("401")) {
                 logger.error(StaticMessages.AUTH_ERROR_401, e);

@@ -17,9 +17,10 @@ public class AuthResponse {
     }
 
     @JsonCreator
-    public AuthResponse(@JsonProperty("token") String token,@JsonProperty("lifeTime") int lifeTime) {
+    public AuthResponse(@JsonProperty("token") String token,@JsonProperty("lifeTime") int lifeTime,@JsonProperty("certThumbprint") String certThumbprint) {
         this.token = token;
         this.lifeTime = lifeTime;
+        this.certThumbprint = certThumbprint;
     }
 
     public AuthResponse(){
