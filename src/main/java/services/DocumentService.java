@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utilities.HttpClientUtil;
 import utilities.JsonParser;
+import utilities.StaticMessages;
+import utilities.StaticProperties;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,13 +23,18 @@ public class DocumentService {
     }
 
     public List<Document> fetchDocuments() throws Exception {
-        logger.info("Fetching documents...");
-        String jwtToken = authService.getJwtToken() != null ? authService.getJwtToken().getToken() : null;
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Custom-Header", "value"); // Need to add token here
-        String response = HttpClientUtil.sendGetRequestWithRetries("https://ru.wiremockapi.cloud/api/signEvent", jwtToken, headers, authService,1);
-        SignEventResponse signEventResponse = parseSignEventResponse(response);
-        return signEventResponse.getTaskList();
+        try{
+            logger.info("Fetching documents...");
+            String jwtToken = authService.getJwtToken() != null ? authService.getJwtToken().getToken() : null;
+            Map<String, String> headers = new HashMap<>();
+            headers.put("authorization", jwtToken);
+            String response = HttpClientUtil.sendGetRequestWithRetries(StaticProperties.properties.getProperty("baseUri")+StaticProperties.properties.getProperty("signEventPath"), jwtToken, headers, authService,1);
+            SignEventResponse signEventResponse = parseSignEventResponse(response);
+            return signEventResponse.getTaskList();
+        }catch (Exception e){
+            logger.error(StaticMessages.GET_DOCUMENT_ERROR_GENERIC, e);
+        }
+        return null;
     }
 
     private List<Document> parseDocuments(String jsonResponse) {

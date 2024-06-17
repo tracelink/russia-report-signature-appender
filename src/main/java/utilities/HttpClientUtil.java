@@ -52,7 +52,7 @@ public class HttpClientUtil {
         conn.setRequestMethod("POST");
         conn.setRequestProperty("Content-Type", "application/json");
         if (jwtToken != null && !jwtToken.isEmpty()) {
-            conn.setRequestProperty("Authorization", "Bearer " + jwtToken);
+            conn.setRequestProperty("authorization", jwtToken);
         }
         if (headers != null) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
@@ -71,7 +71,7 @@ public class HttpClientUtil {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         if (jwtToken != null && !jwtToken.isEmpty()) {
-            conn.setRequestProperty("Authorization", "Bearer " + jwtToken);
+            conn.setRequestProperty("authorization", jwtToken);
         }
         if (headers != null) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {

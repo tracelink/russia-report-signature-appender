@@ -1,28 +1,28 @@
 package model;
 
 public class Document {
-    private String requestId;
+    private String taskId;
     private String signatureType;
-    private String tokenRequestPayload;
-    private String reportPreSignedUrl;
+    private String signingPayload;
+    private String signingTaskContentPreSignedUrl;
 
     // Default constructor
     public Document() {
     }
 
-    public Document(String requestId, String signatureType, String tokenRequestPayload, String reportPreSignedUrl) {
-        this.requestId = requestId;
+    public Document(String taskId, String signatureType, String signingPayload, String signingTaskContentPreSignedUrl) {
+        this.taskId = taskId;
         this.signatureType = signatureType;
-        this.tokenRequestPayload = tokenRequestPayload;
-        this.reportPreSignedUrl = reportPreSignedUrl;
+        this.signingPayload = signingPayload;
+        this.signingTaskContentPreSignedUrl = signingTaskContentPreSignedUrl;
     }
 
-    public String getRequestId() {
-        return requestId;
+    public String getTaskId() {
+        return taskId;
     }
 
-    public void setRequestId(String requestId) {
-        this.requestId = requestId;
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
     }
 
     public String getSignatureType() {
@@ -33,19 +33,19 @@ public class Document {
         this.signatureType = signatureType;
     }
 
-    public String getTokenRequestPayload() {
-        return tokenRequestPayload;
+    public String getSigningPayload() {
+        return signingPayload;
     }
 
-    public void setTokenRequestPayload(String tokenRequestPayload) {
-        this.tokenRequestPayload = tokenRequestPayload;
+    public void setSigningPayload(String signingPayload) {
+        this.signingPayload = signingPayload;
     }
 
-    public String getReportPreSignedUrl() {
-        return reportPreSignedUrl;
+    public String getSigningTaskContentPreSignedUrl() {
+        return signingTaskContentPreSignedUrl;
     }
 
-    public void setReportPreSignedUrl(String reportPreSignedUrl) {
-        this.reportPreSignedUrl = reportPreSignedUrl;
+    public void setSigningTaskContentPreSignedUrl(String signingTaskContentPreSignedUrl) {
+        this.signingTaskContentPreSignedUrl = signingTaskContentPreSignedUrl;
     }
 }
