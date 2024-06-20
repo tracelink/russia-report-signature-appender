@@ -2,15 +2,20 @@ package schedulers;
 
 import model.Document;
 import model.DocumentComparator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import services.AuthService;
 import services.DocumentService;
 import services.GenerateSignatureService;
+import utilities.SignatureUtil;
+import utilities.StaticProperties;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.TimerTask;
 
 public class DocumentSchedulerService extends BaseSchedulerService {
+    private static final Logger logger = LoggerFactory.getLogger(BaseSchedulerService.class);
     private final DocumentService documentService;
     private final GenerateSignatureService generateSignatureService;
     public DocumentSchedulerService(AuthService authService) {
@@ -27,6 +32,7 @@ public class DocumentSchedulerService extends BaseSchedulerService {
                 try{
                     List<Document> documents = documentService.fetchDocuments();
                     Collections.sort(documents, new DocumentComparator());
+                    logger.info("Documents Received :: "+ documents);
                     generateSignatureService.signAndSubmitDocuments(documents);
                 }catch (Exception e){
                     e.printStackTrace();
@@ -35,7 +41,7 @@ public class DocumentSchedulerService extends BaseSchedulerService {
         };
 
         long initialDelay = 300;
-        long period = 6000; // 1 minute
+        long period = Long.parseLong(StaticProperties.properties.getProperty("generateSignatureFrequency"))*6000; // 1 minute
         scheduleAt(task, initialDelay, period);
     }
 

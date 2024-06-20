@@ -28,7 +28,7 @@ public class DocumentService {
             String jwtToken = authService.getJwtToken() != null ? authService.getJwtToken().getToken() : null;
             Map<String, String> headers = new HashMap<>();
             headers.put("authorization", jwtToken);
-            String response = HttpClientUtil.sendGetRequestWithRetries(StaticProperties.properties.getProperty("baseUri")+StaticProperties.properties.getProperty("signEventPath"), jwtToken, headers, authService,1);
+            String response = HttpClientUtil.sendGetRequestWithRetries(StaticProperties.properties.getProperty("baseUri")+StaticProperties.properties.getProperty("taskPath"), jwtToken, headers, authService,1);
             SignEventResponse signEventResponse = parseSignEventResponse(response);
             return signEventResponse.getTaskList();
         }catch (Exception e){

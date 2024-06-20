@@ -35,7 +35,7 @@ public class AuthService {
         try {
             AuthRequest authRequest = new AuthRequest(StaticProperties.properties.getProperty("username"), StaticProperties.properties.getProperty("password"));
             String payload = toJson(authRequest); // Convert authRequest to JSON string
-            String response = HttpClientUtil.sendPostRequest(StaticProperties.properties.getProperty("baseUri")+StaticProperties.properties.getProperty("tokenPath"), payload, null, null,null, 0);
+            String response = HttpClientUtil.sendPostRequest(StaticProperties.properties.getProperty("baseUri")+StaticProperties.properties.getProperty("tokenPath"), payload, null, null, null,0);
             logger.info("Token response : " + response);
             AuthResponse authResponse = parseAuthResponse(response); // Parse JSON response to AuthResponse object
             return new JWTToken(authResponse.getToken(), authResponse.getLifeTime(), authResponse.getCertThumbprint());

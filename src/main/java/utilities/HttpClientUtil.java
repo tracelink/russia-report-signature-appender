@@ -25,7 +25,7 @@ public class HttpClientUtil {
         }
 
         int responseCode = conn.getResponseCode();
-        logger.info("POST Response Code :: " + responseCode);
+        logger.debug("POST Response Code :: " + responseCode);
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
             try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {

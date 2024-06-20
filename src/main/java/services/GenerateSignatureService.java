@@ -4,10 +4,13 @@ import model.Document;
 import model.SignedResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utilities.HttpClientUtil;
+import utilities.JsonParser;
 import utilities.S3FileReader;
 import utilities.SignatureUtil;
-import java.util.List;
+import utilities.StaticProperties;
 
+import java.util.List;
 
 public class GenerateSignatureService {
     private static final Logger logger = LoggerFactory.getLogger(GenerateSignatureService.class);
@@ -25,15 +28,17 @@ public class GenerateSignatureService {
                 String signedPayload = signDocument(document);
                 submitSignedDocument(createSignedResponse(document,signedPayload));
             }catch(Exception e){
+                e.printStackTrace();
                 submitSignedDocument(createSignedResponse(document,null));
             }
         }
     }
 
     private SignedResponse createSignedResponse(Document document,String signedPayload){
+        logger.debug(String.format("Signed Payload : %s",signedPayload));
         return new SignedResponse(signedPayload,
                 document.getSigningPayload(),
-                document.getTaskId(),"SUCCESS",null,null);
+                document.getTaskId(),"SUCCESS");
     }
 
     private String signDocument(Document document) {
@@ -48,11 +53,18 @@ public class GenerateSignatureService {
         }
 
         return SignatureUtil.signDocument(isAttachedSignature,
-                authService.getJwtToken().getCertThumbprint(),payload);
+                authService.getJwtToken().getCertThumbprint(),payload,document.getTaskId());
     }
 
     private void submitSignedDocument(SignedResponse signedResponse) {
         // Convert signed document to JSON (assuming Jackson library is being used)
-        System.out.println(signedResponse);
+        logger.debug(String.format("Signed Response Payload : %s",signedResponse));
+        String str_signedResponse = JsonParser.returnJson(signedResponse);
+        try {
+            HttpClientUtil.sendPostRequest(StaticProperties.properties.getProperty("baseUri")+StaticProperties.properties.getProperty("taskResultPath"),
+                    str_signedResponse,authService.getJwtToken().getToken(),null,authService,1);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

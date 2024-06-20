@@ -17,7 +17,7 @@ public class RunCommand {
     private static final String VERIFICATION_SUCCESS_LINE = "Signature was verified OK";
 
     public static String execute(String[] cmd, boolean isVerification){
-
+        logger.info("Within Execute");
         List<String> result = new ArrayList<>();
 
         try {
@@ -47,6 +47,7 @@ public class RunCommand {
         } catch(Exception e) {
             e.printStackTrace();
         }
+        logger.info("result.toString::"+result.toString());
         return result.toString();
     }
 }

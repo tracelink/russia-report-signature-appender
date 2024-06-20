@@ -17,6 +17,13 @@ public class SignedResponse {
         this.errorDescription = errorDescription;
     }
 
+    public SignedResponse(String signedData, String signingPayload, String taskId, String status) {
+        this.signedData = signedData;
+        this.signingPayload = signingPayload;
+        this.taskId = taskId;
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "SignedResponse{" +
