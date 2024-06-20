@@ -1,5 +1,6 @@
 package utilities;
 
+import customExceptions.SignatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,10 +15,8 @@ import java.util.stream.Collectors;
 public class RunCommand {
     private static final Logger logger = LoggerFactory.getLogger(RunCommand.class);
     private static final String SUCCESS_CODE = "[ErrorCode: 0x00000000]";
-    private static final String VERIFICATION_SUCCESS_LINE = "Signature was verified OK";
 
-    public static String execute(String[] cmd, boolean isVerification){
-        logger.info("Within Execute");
+    public static String execute(String[] cmd, boolean isVerification) throws SignatureException {
         List<String> result = new ArrayList<>();
 
         try {
@@ -25,7 +24,7 @@ public class RunCommand {
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
 
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));){
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));) {
                 result = reader.lines().collect(Collectors.toList());
             } catch (IOException e) {
                 process.destroy();
@@ -35,19 +34,18 @@ public class RunCommand {
             int exitCode = process.waitFor();
             System.out.println("Process exited with code " + exitCode);
 
-            if(isVerification) {
-                final Optional<String> successLine = result.stream().filter(l -> l.contains(VERIFICATION_SUCCESS_LINE)).findFirst();
+            if (isVerification) {
                 final Optional<String> successCode = result.stream().filter(l -> l.contains(SUCCESS_CODE)).findFirst();
-                if(successLine.isPresent() && successCode.isPresent()) {
-                    return VERIFICATION_SUCCESS_LINE;
+                if (successCode.isPresent()) {
+                    return "Document signed successfully.";
                 } else {
-                    return "Signature Verification Failed";
+                    throw new SignatureException("Document signature failed: " + result.toString(), "INTERNAL_FAILURE");
                 }
             }
-        } catch(Exception e) {
-            e.printStackTrace();
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
-        logger.info("result.toString::"+result.toString());
+        logger.debug("result.toString::" + result.toString());
         return result.toString();
     }
 }

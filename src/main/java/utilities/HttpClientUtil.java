@@ -1,8 +1,8 @@
 package utilities;
 
-import services.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import services.AuthService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,12 +36,11 @@ public class HttpClientUtil {
                 }
                 return response.toString();
             }
-        } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED && retryCounts > 0){
+        } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED && retryCounts > 0) {
             authService.refreshToken();
             jwtToken = authService.getJwtToken().getToken();
-            return sendPostRequest(requestUrl,payload,jwtToken,headers,authService,retryCounts - 1);
-        }
-        else {
+            return sendPostRequest(requestUrl, payload, jwtToken, headers, authService, retryCounts - 1);
+        } else {
             throw new Exception("POST request failed with response code: " + responseCode);
         }
     }
@@ -64,9 +63,11 @@ public class HttpClientUtil {
     }
 
     public static String sendGetRequest(String requestUrl, String jwtToken, Map<String, String> headers) throws Exception {
-        return sendGetRequestWithRetries(requestUrl,jwtToken,headers,null,0);
+        return sendGetRequestWithRetries(requestUrl, jwtToken, headers, null, 0);
     }
+
     public static String sendGetRequestWithRetries(String requestUrl, String jwtToken, Map<String, String> headers, AuthService authService, int retryCount) throws Exception {
+        logger.info(String.format("Sending GET for :: %s", requestUrl));
         URL url = new URL(requestUrl);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
@@ -91,11 +92,11 @@ public class HttpClientUtil {
                 }
                 return response.toString();
             }
-        } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED && retryCount > 0){
+        } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED && retryCount > 0) {
             authService.refreshToken();
             jwtToken = authService.getJwtToken().getToken();
-            return sendGetRequestWithRetries(requestUrl,jwtToken,headers,authService,retryCount - 1);
-        }else {
+            return sendGetRequestWithRetries(requestUrl, jwtToken, headers, authService, retryCount - 1);
+        } else {
             throw new Exception("GET request failed with response code: " + responseCode);
         }
     }

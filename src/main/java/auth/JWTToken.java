@@ -7,20 +7,21 @@ public class JWTToken {
     private long expiresAt;
     private String certThumbprint;
 
+    // Constructors
+    public JWTToken() {
+    }
+
+    public JWTToken(String token, long lifetime, String certThumbprint) {
+        this.token = token;
+        this.expiresAt = System.currentTimeMillis() + Duration.ofMinutes(lifetime).toMillis();
+        this.certThumbprint = certThumbprint;
+    }
+
     public String getCertThumbprint() {
         return certThumbprint;
     }
 
     public void setCertThumbprint(String certThumbprint) {
-        this.certThumbprint = certThumbprint;
-    }
-
-    // Constructors
-    public JWTToken() {}
-
-    public JWTToken(String token, long lifetime, String certThumbprint) {
-        this.token = token;
-        this.expiresAt = System.currentTimeMillis() + Duration.ofMinutes(lifetime).toMillis();
         this.certThumbprint = certThumbprint;
     }
 

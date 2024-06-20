@@ -14,10 +14,10 @@ public class Main {
 
         if (isTest) {
             configFile = "/Users/vsharma/Downloads/appTest/application.config";
-        }else if(args.length !=1){
+        } else if (args.length != 1) {
             System.out.println("Usage: java -jar YourJarFile.jar <path_to_config_file>");
             System.exit(1);
-        }else{
+        } else {
             configFile = args[0];
         }
         StaticProperties.loadProperties(configFile);
@@ -27,5 +27,5 @@ public class Main {
         DocumentSchedulerService documentSchedulerService = new DocumentSchedulerService(authService);
         documentSchedulerService.start();
 
-        }
     }
+}

@@ -23,25 +23,26 @@ public class DocumentService {
     }
 
     public List<Document> fetchDocuments() throws Exception {
-        try{
+        try {
             logger.info("Fetching documents...");
             String jwtToken = authService.getJwtToken() != null ? authService.getJwtToken().getToken() : null;
             Map<String, String> headers = new HashMap<>();
             headers.put("authorization", jwtToken);
-            String response = HttpClientUtil.sendGetRequestWithRetries(StaticProperties.properties.getProperty("baseUri")+StaticProperties.properties.getProperty("taskPath"), jwtToken, headers, authService,1);
+            String response = HttpClientUtil.sendGetRequestWithRetries(StaticProperties.properties.getProperty("baseUri") + StaticProperties.properties.getProperty("taskPath"), jwtToken, headers, authService, 1);
             SignEventResponse signEventResponse = parseSignEventResponse(response);
             return signEventResponse.getTaskList();
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(StaticMessages.GET_DOCUMENT_ERROR_GENERIC, e);
         }
         return null;
     }
 
     private List<Document> parseDocuments(String jsonResponse) {
-        return JsonParser.returnObject(jsonResponse, new TypeReference<List<Document>>() {});
+        return JsonParser.returnObject(jsonResponse, new TypeReference<List<Document>>() {
+        });
     }
 
-    private SignEventResponse parseSignEventResponse(String jsonResponse){
+    private SignEventResponse parseSignEventResponse(String jsonResponse) {
         return JsonParser.returnObject(jsonResponse, SignEventResponse.class);
     }
 

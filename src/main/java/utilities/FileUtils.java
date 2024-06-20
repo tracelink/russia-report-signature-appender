@@ -1,7 +1,7 @@
 package utilities;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.GenerateSignatureService;
 
 import java.io.BufferedWriter;
 import java.nio.charset.StandardCharsets;
@@ -15,7 +15,7 @@ import java.util.Collections;
 public class FileUtils {
     private static final Logger logger = LoggerFactory.getLogger(FileUtils.class);
 
-    public static void writeToFile(String file,String content){
+    public static void writeToFile(String file, String content) {
         Path filePath = Paths.get(file);
 
         try (BufferedWriter writer = Files.newBufferedWriter(filePath, StandardOpenOption.CREATE)) {
@@ -27,24 +27,24 @@ public class FileUtils {
 
     }
 
-    public static String readFromFile(String file){
+    public static String readFromFile(String file) {
         Path filePath = Paths.get(file);
-        try{
+        try {
             //reading content from the file path provided
             byte[] fileContent = Files.readAllBytes(filePath);
             return new String(fileContent, StandardCharsets.UTF_8);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static void emptyFile(String file){
+    public static void emptyFile(String file) {
         //emptying the file
         Path filePath = Paths.get(file);
         try {
             Files.write(filePath, Collections.emptyList());
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

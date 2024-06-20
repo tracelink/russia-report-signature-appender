@@ -9,13 +9,13 @@ public abstract class BaseSchedulerService {
     private final AuthService authService;
     private final Timer timer;
 
-    public BaseSchedulerService(AuthService authService){
+    public BaseSchedulerService(AuthService authService) {
         this.authService = authService;
         this.timer = new Timer(false);
     }
 
-    protected void scheduleAt(TimerTask task, long initialDelay, long period){
-        this.timer.scheduleAtFixedRate(task,initialDelay,period);
+    protected void scheduleAt(TimerTask task, long initialDelay, long period) {
+        this.timer.scheduleAtFixedRate(task, initialDelay, period);
     }
 
     protected AuthService getAuthService() {

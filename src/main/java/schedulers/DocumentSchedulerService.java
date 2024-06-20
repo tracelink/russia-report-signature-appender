@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import services.AuthService;
 import services.DocumentService;
 import services.GenerateSignatureService;
-import utilities.SignatureUtil;
 import utilities.StaticProperties;
 
 import java.util.Collections;
@@ -18,6 +17,7 @@ public class DocumentSchedulerService extends BaseSchedulerService {
     private static final Logger logger = LoggerFactory.getLogger(BaseSchedulerService.class);
     private final DocumentService documentService;
     private final GenerateSignatureService generateSignatureService;
+
     public DocumentSchedulerService(AuthService authService) {
         super(authService);
         this.documentService = new DocumentService(authService);
@@ -29,19 +29,20 @@ public class DocumentSchedulerService extends BaseSchedulerService {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                try{
+                try {
                     List<Document> documents = documentService.fetchDocuments();
                     Collections.sort(documents, new DocumentComparator());
-                    logger.info("Documents Received :: "+ documents);
+                    logger.info("Documents Received :: " + documents);
                     generateSignatureService.signAndSubmitDocuments(documents);
-                }catch (Exception e){
+                    logger.info("Batch Complete!");
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         };
 
         long initialDelay = 300;
-        long period = Long.parseLong(StaticProperties.properties.getProperty("generateSignatureFrequency"))*6000; // 1 minute
+        long period = Long.parseLong(StaticProperties.properties.getProperty("generateSignatureFrequency")) * 60000;
         scheduleAt(task, initialDelay, period);
     }
 

@@ -8,23 +8,23 @@ public class AuthResponse {
     private int lifeTime;
     private String certThumbprint;
 
+    @JsonCreator
+    public AuthResponse(@JsonProperty("token") String token, @JsonProperty("lifeTime") int lifeTime, @JsonProperty("certThumbprint") String certThumbprint) {
+        this.token = token;
+        this.lifeTime = lifeTime;
+        this.certThumbprint = certThumbprint;
+    }
+
+    public AuthResponse() {
+        //default constructor
+    }
+
     public String getCertThumbprint() {
         return certThumbprint;
     }
 
     public void setCertThumbprint(String certThumbprint) {
         this.certThumbprint = certThumbprint;
-    }
-
-    @JsonCreator
-    public AuthResponse(@JsonProperty("token") String token,@JsonProperty("lifeTime") int lifeTime,@JsonProperty("certThumbprint") String certThumbprint) {
-        this.token = token;
-        this.lifeTime = lifeTime;
-        this.certThumbprint = certThumbprint;
-    }
-
-    public AuthResponse(){
-        //default constructor
     }
 
     public String getToken() {
