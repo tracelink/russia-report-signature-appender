@@ -1,4 +1,8 @@
 package utilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import services.GenerateSignatureService;
+
 import java.io.BufferedWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -9,6 +13,7 @@ import java.util.Collections;
 
 
 public class FileUtils {
+    private static final Logger logger = LoggerFactory.getLogger(FileUtils.class);
 
     public static void writeToFile(String file,String content){
         Path filePath = Paths.get(file);

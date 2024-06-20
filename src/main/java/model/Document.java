@@ -48,4 +48,16 @@ public class Document {
     public void setSigningTaskContentPreSignedUrl(String signingTaskContentPreSignedUrl) {
         this.signingTaskContentPreSignedUrl = signingTaskContentPreSignedUrl;
     }
+
+    @Override
+    public String toString() {
+        return "Document{" +
+                "taskId='" + taskId + '\'' +
+                ", signatureType='" + signatureType + '\'' +
+                ", signingPayload='" + signingPayload + '\'' +
+                ", signingTaskContentPreSignedUrl='" + signingTaskContentPreSignedUrl + '\'' +
+                '}';
+    }
+
+
 }

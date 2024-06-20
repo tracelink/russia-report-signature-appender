@@ -1,8 +1,11 @@
 package utilities;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JsonParser {
+    private static final Logger logger = LoggerFactory.getLogger(JsonParser.class);
     private static ObjectMapper mapper = new ObjectMapper();
     public static String returnJson(Object inputObject){
         try {

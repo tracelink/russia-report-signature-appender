@@ -1,17 +1,22 @@
 package schedulers;
 
 import model.Document;
+import model.DocumentComparator;
 import services.AuthService;
 import services.DocumentService;
+import services.GenerateSignatureService;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.TimerTask;
 
 public class DocumentSchedulerService extends BaseSchedulerService {
     private final DocumentService documentService;
+    private final GenerateSignatureService generateSignatureService;
     public DocumentSchedulerService(AuthService authService) {
         super(authService);
         this.documentService = new DocumentService(authService);
+        this.generateSignatureService = new GenerateSignatureService(authService);
     }
 
     @Override
@@ -21,7 +26,8 @@ public class DocumentSchedulerService extends BaseSchedulerService {
             public void run() {
                 try{
                     List<Document> documents = documentService.fetchDocuments();
-                    System.out.println(documents);
+                    Collections.sort(documents, new DocumentComparator());
+                    generateSignatureService.signAndSubmitDocuments(documents);
                 }catch (Exception e){
                     e.printStackTrace();
                 }

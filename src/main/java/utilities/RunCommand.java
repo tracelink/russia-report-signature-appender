@@ -1,5 +1,8 @@
 package utilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,7 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class RunCommand {
-
+    private static final Logger logger = LoggerFactory.getLogger(RunCommand.class);
     private static final String SUCCESS_CODE = "[ErrorCode: 0x00000000]";
     private static final String VERIFICATION_SUCCESS_LINE = "Signature was verified OK";
 
