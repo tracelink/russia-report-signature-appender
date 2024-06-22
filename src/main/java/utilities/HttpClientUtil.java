@@ -17,6 +17,8 @@ public class HttpClientUtil {
     private static final Logger logger = LoggerFactory.getLogger(HttpClientUtil.class);
 
     public static String sendPostRequest(String requestUrl, String payload, String jwtToken, Map<String, String> headers, AuthService authService, int retryCounts) throws Exception {
+        logger.info("Sending POST request to URL: " + requestUrl);
+        logger.debug("Request payload: " + payload);
         HttpURLConnection conn = getHttpURLConnection(requestUrl, jwtToken, headers);
 
         try (OutputStream os = conn.getOutputStream()) {
@@ -25,7 +27,7 @@ public class HttpClientUtil {
         }
 
         int responseCode = conn.getResponseCode();
-        logger.debug("POST Response Code :: " + responseCode);
+        logger.info("POST Response Code :: " + responseCode);
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
             try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
@@ -34,7 +36,9 @@ public class HttpClientUtil {
                 while ((inputLine = in.readLine()) != null) {
                     response.append(inputLine);
                 }
-                return response.toString();
+                String responseStr = response.toString();
+                logger.debug(String.format("POST Response Body :: %s", responseStr));
+                return responseStr;
             }
         } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED && retryCounts > 0) {
             authService.refreshToken();
@@ -52,10 +56,12 @@ public class HttpClientUtil {
         conn.setRequestProperty("Content-Type", "application/json");
         if (jwtToken != null && !jwtToken.isEmpty()) {
             conn.setRequestProperty("authorization", jwtToken);
+            logger.debug("Authorization header set: " + jwtToken);
         }
         if (headers != null) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 conn.setRequestProperty(entry.getKey(), entry.getValue());
+                logger.debug("Header: " + entry.getKey() + " = " + entry.getValue());
             }
         }
         conn.setDoOutput(true);
@@ -90,7 +96,9 @@ public class HttpClientUtil {
                 while ((inputLine = in.readLine()) != null) {
                     response.append(inputLine);
                 }
-                return response.toString();
+                String responseStr = response.toString();
+                logger.debug("GET Response Body :: " + response.toString());
+                return responseStr;
             }
         } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED && retryCount > 0) {
             authService.refreshToken();

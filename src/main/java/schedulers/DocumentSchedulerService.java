@@ -9,11 +9,15 @@ import services.DocumentService;
 import services.GenerateSignatureService;
 import utilities.StaticProperties;
 
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.TimerTask;
 
 public class DocumentSchedulerService extends BaseSchedulerService {
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS").withZone(ZoneOffset.UTC);
     private static final Logger logger = LoggerFactory.getLogger(BaseSchedulerService.class);
     private final DocumentService documentService;
     private final GenerateSignatureService generateSignatureService;
@@ -30,7 +34,13 @@ public class DocumentSchedulerService extends BaseSchedulerService {
             @Override
             public void run() {
                 try {
+                    Instant startTime = Instant.now();
+                    logger.debug(String.format("Starting with document processing, Time (GMT): %s", formatter.format(startTime)));
                     List<Document> documents = documentService.fetchDocuments();
+                    if (documents.isEmpty()) {
+                        logger.info("No tasks received for signing!!");
+                        return;
+                    }
                     Collections.sort(documents, new DocumentComparator());
                     logger.info("Documents Received :: " + documents);
                     generateSignatureService.signAndSubmitDocuments(documents);

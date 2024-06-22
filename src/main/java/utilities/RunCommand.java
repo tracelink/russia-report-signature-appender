@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,6 +18,7 @@ public class RunCommand {
     private static final String SUCCESS_CODE = "[ErrorCode: 0x00000000]";
 
     public static String execute(String[] cmd, boolean isVerification) throws SignatureException {
+        logger.debug(String.format("Command for signature :: %s", Arrays.toString(cmd)));
         List<String> result = new ArrayList<>();
 
         try {

@@ -28,8 +28,11 @@ public class GenerateSignatureService {
             try {
                 String signedPayload = signDocument(document);
                 submitSignedDocument(createSignedResponse(document, signedPayload));
+            } catch (SignatureException e) {
+                logger.error(String.format("There was an error Signing the document %s. Failure on Report submission is set to %s. Error :: %s", document.getTaskId(), StaticProperties.properties.get("failReportOnSignatureFailure"), e.getMessage()));
+                submitSignedDocument(createSignedResponse(document, null, e.getErrorCode(), e.getMessage()));
             } catch (Exception e) {
-                logger.error(String.format("There was an error Signing the document. Skipping the Submission for this Task. Error :: %s", e.getMessage()));
+                logger.error(String.format("There was an exception received processing the document %s. Please refer debug logs for the complete stack trace. Exception : %s", document.getTaskId(), e.getMessage()));
             }
         }
     }
@@ -40,16 +43,18 @@ public class GenerateSignatureService {
                 document.getTaskId(), "SUCCESS");
     }
 
-    private String signDocument(Document document) throws SignatureException {
+    private SignedResponse createSignedResponse(Document document, String signedPayload, String errCode, String errDescription) {
+        return new SignedResponse(signedPayload,
+                document.getSigningPayload(),
+                document.getTaskId(), "ERROR", errCode, errDescription);
+    }
+
+    private String signDocument(Document document) throws Exception {
         //Decide on if an attached/detached signature is needed
         boolean isAttachedSignature = "ATTACHED".equals(document.getSignatureType());
         boolean isOMSorMDLP = (omsTask.equals(document.getTaskId()) || mdlpTask.equals(document.getTaskId()));
         String payload = null;
-        try {
-            payload = isOMSorMDLP ? document.getSigningPayload() : S3FileReader.getFileContentFromS3(document.getSigningTaskContentPreSignedUrl());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        payload = isOMSorMDLP ? document.getSigningPayload() : S3FileReader.getFileContentFromS3(document.getSigningTaskContentPreSignedUrl());
 
         return SignatureUtil.signDocument(isAttachedSignature,
                 authService.getJwtToken().getCertThumbprint(), payload, document.getTaskId());
@@ -58,7 +63,6 @@ public class GenerateSignatureService {
     private void submitSignedDocument(SignedResponse signedResponse) {
         // Convert signed document to JSON (assuming Jackson library is being used)
         logger.info(String.format("Submitting TaskId : %s", signedResponse.getTaskId()));
-        logger.debug(String.format("Signed Response Payload : %s", signedResponse));
         String str_signedResponse = JsonParser.returnJson(signedResponse);
         try {
             HttpClientUtil.sendPostRequest(StaticProperties.properties.getProperty("baseUri") + StaticProperties.properties.getProperty("taskResultPath"),

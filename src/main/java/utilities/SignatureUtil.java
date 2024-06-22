@@ -14,7 +14,7 @@ public class SignatureUtil {
 
     public static String signDocument(boolean isAttachedSignature, String thumbprint, String payload, String taskId) throws SignatureException {
         Instant startTime = Instant.now();
-        logger.info(String.format("Task ID: %s, Start Time (GMT): %s", taskId, formatter.format(startTime)));
+        logger.info(String.format("Signing Task ID: %s, Start Time (GMT): %s", taskId, formatter.format(startTime)));
 
         try {
             String pathForExecutable = StaticProperties.properties.getProperty("pathForExecutable");
@@ -65,11 +65,13 @@ public class SignatureUtil {
             //Reading the file content from the output file
             String signature = FileUtils.readFromFile(outputFilePath);
             assert signature != null;
-            return StringManipulator.trimWhiteSpaces(signature);
+            String processedSignature = StringManipulator.trimWhiteSpaces(signature);
+            logger.debug("Generated signature :: " + processedSignature);
+            return processedSignature;
         } finally {
             Instant endTime = Instant.now();
             long timeTakenMillis = endTime.toEpochMilli() - startTime.toEpochMilli();
-            logger.info(String.format("Task ID: %s, End Time (GMT): %s, Time Taken (milliseconds): %d",
+            logger.info(String.format("Signing Task ID: %s, End Time (GMT): %s, Time Taken (milliseconds): %d",
                     taskId, formatter.format(endTime), timeTakenMillis));
         }
 
