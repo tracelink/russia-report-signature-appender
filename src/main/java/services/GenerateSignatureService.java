@@ -30,7 +30,13 @@ public class GenerateSignatureService {
                 submitSignedDocument(createSignedResponse(document, signedPayload));
             } catch (SignatureException e) {
                 logger.error(String.format("There was an error Signing the document %s. Failure on Report submission is set to %s. Error :: %s", document.getTaskId(), StaticProperties.properties.get("failReportOnSignatureFailure"), e.getMessage()));
-                submitSignedDocument(createSignedResponse(document, null, e.getErrorCode(), e.getMessage()));
+                boolean failReportOnSignatureFailure = Boolean.parseBoolean(StaticProperties.properties.getProperty("failReportOnSignatureFailure","false"));
+                if(failReportOnSignatureFailure){
+                    logger.info("failReportOnSignatureFailure is set to :: true, Returning a failure response.");
+                    submitSignedDocument(createSignedResponse(document, null, e.getErrorCode(), e.getMessage()));
+                } else{
+                    logger.info("failReportOnSignatureFailure is set to :: false, Not returning a failure response.");
+                }
             } catch (Exception e) {
                 logger.error(String.format("There was an exception received processing the document %s. Please refer debug logs for the complete stack trace. Exception : %s", document.getTaskId(), e.getMessage()));
             }

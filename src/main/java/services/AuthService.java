@@ -53,6 +53,11 @@ public class AuthService {
     public void refreshToken() {
         logger.info("Refreshing JWT token...");
         this.tokenCache.setJwtToken(authenticate());
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            logger.warn("Could not perform wait after token refresh!!");
+        }
     }
 
     private String toJson(AuthRequest authRequest) {

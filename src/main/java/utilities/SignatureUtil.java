@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 
 public class SignatureUtil {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS").withZone(ZoneOffset.UTC);
@@ -15,7 +16,8 @@ public class SignatureUtil {
     public static String signDocument(boolean isAttachedSignature, String thumbprint, String payload, String taskId) throws SignatureException {
         Instant startTime = Instant.now();
         logger.info(String.format("Signing Task ID: %s, Start Time (GMT): %s", taskId, formatter.format(startTime)));
-
+        String encodedString = Base64.getEncoder().encodeToString(payload.getBytes());
+        logger.debug("Base64 value of the payload :: "+ encodedString);
         try {
             String pathForExecutable = StaticProperties.properties.getProperty("pathForExecutable");
             String inputFilePath = StaticProperties.properties.getProperty("inputFilePath");

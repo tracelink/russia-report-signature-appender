@@ -91,13 +91,14 @@ public class HttpClientUtil {
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
             try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
-                String inputLine;
                 StringBuilder response = new StringBuilder();
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
+                int charRead;
+                char[] charBuffer = new char[1024];
+                while ((charRead = in.read(charBuffer)) != -1) {
+                    response.append(charBuffer, 0, charRead);
                 }
                 String responseStr = response.toString();
-                logger.debug("GET Response Body :: " + response.toString());
+                logger.debug("GET Response Body :: " + responseStr);
                 return responseStr;
             }
         } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED && retryCount > 0) {
