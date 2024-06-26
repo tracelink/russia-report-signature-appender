@@ -37,12 +37,14 @@ public class DocumentSchedulerService extends BaseSchedulerService {
                     Instant startTime = Instant.now();
                     logger.debug(String.format("Starting with document processing, Time (GMT): %s", formatter.format(startTime)));
                     List<Document> documents = documentService.fetchDocuments();
+                    logger.info("Documents list received :: " + documents);
+
                     if (documents.isEmpty()) {
                         logger.info("No tasks received for signing!!");
                         return;
                     }
                     Collections.sort(documents, new DocumentComparator());
-                    logger.info("Documents Received :: " + documents);
+                    logger.debug("Documents list after sorting :: " + documents);
                     generateSignatureService.signAndSubmitDocuments(documents);
                     logger.info("Batch Complete!");
                 } catch (Exception e) {
