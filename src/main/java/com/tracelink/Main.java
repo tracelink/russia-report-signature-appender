@@ -9,12 +9,9 @@ public class Main {
     public static void main(String[] args) {
         AuthService authService;
 
-        boolean isTest = Boolean.parseBoolean(System.getenv("isTest"));
         String configFile = null;
 
-        if (isTest) {
-            configFile = "/Users/vsharma/Downloads/appTest/application.config";
-        } else if (args.length != 1) {
+        if (args.length != 1) {
             System.out.println("Usage: java -jar YourJarFile.jar <path_to_config_file>");
             System.exit(1);
         } else {
