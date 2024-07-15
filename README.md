@@ -36,11 +36,11 @@ The Russia Report Signature Appender is a Java-based application designed to app
    tokenPath=/api/token
    taskPath=/api/tasks
    taskResultPath=/api/taskResult
-   pathForExecutable=c:\\Program Files\\Crypto Pro\\CSP\\csptest.exe
-   inputFilePath=C:\\Users\\user\\Downloads\\Demo\\telo.txt
-   outputFilePath=C:\\Users\\user\\Downloads\\Demo\\sign_out.txt
+   pathForExecutable=<Complete path for cspTest.exe>
+   inputFilePath=<Complete path for infput file>
+   outputFilePath=<Complete path for output file>
    generateSignatureFrequency=1
-   log.level=debug
+   log.level=info
    failReportOnSignatureFailure=true
 
 Note : Sample folder provided in the repo.
